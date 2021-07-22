@@ -1,0 +1,23 @@
+prometheus:
+  url: http://prometheus-server
+  port: 80
+  path: ""
+
+rules:
+  default: true
+  custom:
+   - seriesQuery: 'jvm_threads_live_threads{kubernetes_namespace!="",kubernetes_pod_name!=""}'
+     resources:
+       overrides:
+         kubernetes_namespace: { resource: "namespace" }
+         kubernetes_pod_name: { resource: "pod" }
+     name:
+       matches: "^(.*)"
+       as: "${1}_per_second"
+     metricsQuery: 'sum(rate(<<.Series>>{<<.LabelMatchers>>}[2m])) by (<<.GroupBy>>)'
+   - seriesQuery: 'jvm_threads_live_threads{kubernetes_namespace!="",kubernetes_pod_name!=""}'
+     resources:
+       overrides:
+         kubernetes_namespace: { resource: "namespace" }
+         kubernetes_pod_name: { resource: "pod" }
+     metricsQuery: '<<.Series>>{<<.LabelMatchers>>}'
