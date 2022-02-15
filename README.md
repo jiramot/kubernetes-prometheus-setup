@@ -21,6 +21,10 @@ helm install prometheus prometheus-community/prometheus --create-namespace -n mo
 helm repo add grafana https://grafana.github.io/helm-charts
 helm install grafana grafana/grafana -n monitoring-system
 ```
+## For GKE
+```
+kubectl create clusterrolebinding cluster-admin-binding --clusterrole=cluster-admin --user=$(gcloud info --format='value(config.account)')
+```
 ## Install metric server on minikube
 https://www.educative.io/courses/advanced-kubernetes-techniques/qVYQ5g9pwAk
 ```
